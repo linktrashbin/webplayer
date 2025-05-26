@@ -13,8 +13,11 @@
 
         body {
             background: #000;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .player-container {
@@ -31,6 +34,8 @@
             max-height: 100%;
             width: auto;
             height: auto;
+            -webkit-playsinline: true;
+            playsinline: true;
         }
 
         .controls {
@@ -49,9 +54,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 90vw;
+            flex-wrap: wrap;
         }
 
-        .player-container:hover .controls {
+        .player-container:hover .controls,
+        .controls.show {
             opacity: 1;
         }
 
@@ -61,13 +69,19 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 12px;
             border-radius: 50%;
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .control-btn:hover {
+        .control-btn:hover,
+        .control-btn:active {
             background: linear-gradient(145deg, #ff6b6b, #ff5252);
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
@@ -77,23 +91,26 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex: 1;
+            min-width: 250px;
         }
 
         .progress-container {
             flex: 1;
-            height: 8px;
+            height: 12px;
             background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             position: relative;
-            min-width: 200px;
+            min-width: 150px;
             overflow: hidden;
+            -webkit-appearance: none;
         }
 
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #ff6b6b, #ff8a80);
-            border-radius: 4px;
+            border-radius: 6px;
             width: 0%;
             transition: width 0.1s ease;
             box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
@@ -103,8 +120,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             background: #fff;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -112,7 +129,8 @@
             transition: opacity 0.3s ease;
         }
 
-        .progress-container:hover .progress-handle {
+        .progress-container:hover .progress-handle,
+        .progress-container:active .progress-handle {
             opacity: 1;
         }
 
@@ -124,18 +142,20 @@
 
         .volume-slider {
             width: 80px;
-            height: 6px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
+            border-radius: 4px;
             outline: none;
             cursor: pointer;
+            -webkit-appearance: none;
             appearance: none;
         }
 
         .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             background: #ff6b6b;
             border-radius: 50%;
             cursor: pointer;
@@ -154,8 +174,8 @@
         .quality-indicator {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 25px;
             font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
@@ -187,16 +207,35 @@
         .error-message {
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             background: rgba(255, 0, 0, 0.2);
-            border-radius: 10px;
+            border-radius: 15px;
             margin: 20px;
+            max-width: 80%;
         }
 
         .loading {
             color: white;
             text-align: center;
             font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .top-info {
@@ -207,8 +246,94 @@
             transition: opacity 0.3s ease;
         }
 
-        .player-container:hover .top-info {
+        .player-container:hover .top-info,
+        .top-info.show {
             opacity: 1;
+        }
+
+        .retry-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .play-overlay.show {
+            opacity: 1;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .controls {
+                bottom: 10px;
+                padding: 12px 20px;
+                gap: 12px;
+                max-width: 95vw;
+            }
+
+            .control-btn {
+                padding: 10px;
+                min-width: 40px;
+                min-height: 40px;
+                font-size: 14px;
+            }
+
+            .seek-controls {
+                min-width: 200px;
+            }
+
+            .progress-container {
+                min-width: 120px;
+                height: 15px;
+            }
+
+            .volume-slider {
+                width: 60px;
+            }
+
+            .time-display {
+                font-size: 12px;
+                min-width: 90px;
+            }
+
+            .top-info {
+                top: 10px;
+                right: 10px;
+            }
+
+            .quality-indicator {
+                padding: 6px 12px;
+                font-size: 10px;
+            }
         }
 
         @keyframes pulse {
@@ -223,23 +348,32 @@
     </style>
 </head>
 <body>
-    <div class="player-container">
-        <div id="loading" class="loading">Loading video...</div>
-        <div id="error" class="error-message" style="display: none;">
-            <h3>Error loading video</h3>
-            <p>Please check the video URL or try a different format.</p>
+    <div class="player-container" id="playerContainer">
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <div>Loading video...</div>
         </div>
         
-        <video id="videoPlayer" style="display: none;" preload="metadata" autoplay>
+        <div id="error" class="error-message" style="display: none;">
+            <h3>Error loading video</h3>
+            <p id="errorMessage">Please check the video URL or try a different format.</p>
+            <button class="retry-btn" id="retryBtn">Retry</button>
+        </div>
+        
+        <video id="videoPlayer" style="display: none;" preload="metadata" playsinline webkit-playsinline>
             Your browser doesn't support video playback.
         </video>
 
-        <div class="top-info">
+        <div class="play-overlay" id="playOverlay">
+            ▶️
+        </div>
+
+        <div class="top-info" id="topInfo">
             <div class="quality-indicator" id="qualityIndicator">AUTO</div>
         </div>
 
-        <div class="controls">
-            <button class="control-btn" id="playPauseBtn">⏸️</button>
+        <div class="controls" id="controls">
+            <button class="control-btn" id="playPauseBtn">▶️</button>
             <button class="control-btn" id="stopBtn">⏹️</button>
             
             <div class="seek-controls">
@@ -280,6 +414,16 @@
                 this.qualityIndicator = document.getElementById('qualityIndicator');
                 this.loading = document.getElementById('loading');
                 this.error = document.getElementById('error');
+                this.retryBtn = document.getElementById('retryBtn');
+                this.playOverlay = document.getElementById('playOverlay');
+                this.controls = document.getElementById('controls');
+                this.topInfo = document.getElementById('topInfo');
+                this.playerContainer = document.getElementById('playerContainer');
+
+                this.videoUrl = '';
+                this.controlsTimeout = null;
+                this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                this.isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
                 this.init();
             }
@@ -287,24 +431,49 @@
             init() {
                 this.loadVideoFromURL();
                 this.bindEvents();
+                this.setupMobileControls();
             }
 
             loadVideoFromURL() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const videoUrl = urlParams.get('url') || urlParams.get('movie');
+                this.videoUrl = urlParams.get('url') || urlParams.get('movie');
                 
-                if (!videoUrl) {
+                if (!this.videoUrl) {
                     this.showError('No video URL provided. Use ?url=YOUR_VIDEO_URL');
                     return;
                 }
 
-                this.video.src = videoUrl;
+                this.loadVideo();
+            }
+
+            loadVideo() {
+                this.loading.style.display = 'flex';
+                this.error.style.display = 'none';
+                this.video.style.display = 'none';
+                this.playOverlay.classList.remove('show');
+
+                // Clear previous source
+                this.video.src = '';
                 this.video.load();
-                this.detectQuality(videoUrl);
+
+                // Multiple format support for better compatibility
+                const videoExtension = this.videoUrl.toLowerCase().split('.').pop().split('?')[0];
+                
+                if (this.isValidVideoFormat(videoExtension)) {
+                    this.video.src = this.videoUrl;
+                    this.video.load();
+                    this.detectQuality(this.videoUrl);
+                } else {
+                    this.showError(`Unsupported video format: .${videoExtension}. Try MP4, WebM, or MOV.`);
+                }
+            }
+
+            isValidVideoFormat(extension) {
+                const supportedFormats = ['mp4', 'webm', 'mov', 'm4v', 'ogg'];
+                return supportedFormats.includes(extension);
             }
 
             detectQuality(url) {
-                // Auto-detect quality from URL or file name
                 const urlLower = url.toLowerCase();
                 
                 if (urlLower.includes('4k') || urlLower.includes('2160p') || urlLower.includes('uhd')) {
@@ -325,23 +494,85 @@
                 this.qualityIndicator.className = `quality-indicator quality-${type}`;
             }
 
+            setupMobileControls() {
+                if (this.isMobile) {
+                    // Show controls permanently on mobile
+                    this.controls.classList.add('show');
+                    this.topInfo.classList.add('show');
+                    
+                    // Add touch events
+                    this.playerContainer.addEventListener('touchstart', (e) => {
+                        this.showControlsTemporarily();
+                    });
+
+                    // Prevent context menu on long press
+                    this.video.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                    });
+                }
+            }
+
+            showControlsTemporarily() {
+                this.controls.classList.add('show');
+                this.topInfo.classList.add('show');
+                
+                clearTimeout(this.controlsTimeout);
+                this.controlsTimeout = setTimeout(() => {
+                    if (!this.video.paused) {
+                        this.controls.classList.remove('show');
+                        this.topInfo.classList.remove('show');
+                    }
+                }, 3000);
+            }
+
             bindEvents() {
                 // Video events
                 this.video.addEventListener('loadstart', () => {
-                    this.loading.style.display = 'block';
+                    this.loading.style.display = 'flex';
                 });
 
                 this.video.addEventListener('canplay', () => {
                     this.loading.style.display = 'none';
                     this.video.style.display = 'block';
                     this.error.style.display = 'none';
-                    
-                    // Auto-detect actual quality after video loads
                     this.detectActualQuality();
+                    
+                    // For iOS, show play overlay instead of autoplay
+                    if (this.isIOS) {
+                        this.playOverlay.classList.add('show');
+                    } else {
+                        // Try autoplay for non-iOS devices
+                        this.video.play().catch(e => {
+                            console.log('Autoplay prevented:', e);
+                            this.playOverlay.classList.add('show');
+                        });
+                    }
                 });
 
-                this.video.addEventListener('error', () => {
-                    this.showError('Failed to load video. Please check the URL and format.');
+                this.video.addEventListener('error', (e) => {
+                    console.error('Video error:', e);
+                    let errorMsg = 'Failed to load video. ';
+                    
+                    if (this.video.error) {
+                        switch(this.video.error.code) {
+                            case this.video.error.MEDIA_ERR_ABORTED:
+                                errorMsg += 'Video loading was aborted.';
+                                break;
+                            case this.video.error.MEDIA_ERR_NETWORK:
+                                errorMsg += 'Network error occurred.';
+                                break;
+                            case this.video.error.MEDIA_ERR_DECODE:
+                                errorMsg += 'Video format not supported.';
+                                break;
+                            case this.video.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                                errorMsg += 'Video source not supported.';
+                                break;
+                            default:
+                                errorMsg += 'Unknown error occurred.';
+                        }
+                    }
+                    
+                    this.showError(errorMsg);
                 });
 
                 this.video.addEventListener('timeupdate', () => {
@@ -351,10 +582,16 @@
 
                 this.video.addEventListener('play', () => {
                     this.playPauseBtn.textContent = '⏸️';
+                    this.playOverlay.classList.remove('show');
                 });
 
                 this.video.addEventListener('pause', () => {
                     this.playPauseBtn.textContent = '▶️';
+                });
+
+                this.video.addEventListener('ended', () => {
+                    this.playPauseBtn.textContent = '▶️';
+                    this.playOverlay.classList.add('show');
                 });
 
                 // Control events
@@ -366,9 +603,19 @@
                 this.muteBtn.addEventListener('click', () => this.toggleMute());
                 this.volumeSlider.addEventListener('input', () => this.setVolume());
                 this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+                this.retryBtn.addEventListener('click', () => this.loadVideo());
+                this.playOverlay.addEventListener('click', () => this.play());
 
-                // Keyboard shortcuts
-                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+                // Keyboard shortcuts (desktop only)
+                if (!this.isMobile) {
+                    document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+                }
+
+                // Touch events for mobile
+                if (this.isMobile) {
+                    this.progressContainer.addEventListener('touchstart', (e) => this.handleTouchSeek(e));
+                    this.progressContainer.addEventListener('touchmove', (e) => this.handleTouchSeek(e));
+                }
             }
 
             detectActualQuality() {
@@ -387,9 +634,16 @@
                 }
             }
 
+            play() {
+                this.video.play().catch(e => {
+                    console.log('Play failed:', e);
+                    this.showError('Unable to play video. Please try again.');
+                });
+            }
+
             togglePlayPause() {
                 if (this.video.paused) {
-                    this.video.play();
+                    this.play();
                 } else {
                     this.video.pause();
                 }
@@ -420,7 +674,20 @@
                 const rect = this.progressContainer.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 const width = rect.width;
-                const percentage = clickX / width;
+                const percentage = Math.max(0, Math.min(1, clickX / width));
+                
+                if (this.video.duration) {
+                    this.video.currentTime = percentage * this.video.duration;
+                }
+            }
+
+            handleTouchSeek(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = this.progressContainer.getBoundingClientRect();
+                const touchX = touch.clientX - rect.left;
+                const width = rect.width;
+                const percentage = Math.max(0, Math.min(1, touchX / width));
                 
                 if (this.video.duration) {
                     this.video.currentTime = percentage * this.video.duration;
@@ -465,12 +732,21 @@
             }
 
             toggleFullscreen() {
-                if (!document.fullscreenElement) {
-                    this.video.requestFullscreen().catch(err => {
-                        console.log('Fullscreen error:', err);
-                    });
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (this.video.requestFullscreen) {
+                        this.video.requestFullscreen();
+                    } else if (this.video.webkitRequestFullscreen) {
+                        this.video.webkitRequestFullscreen();
+                    } else if (this.video.webkitEnterFullscreen) {
+                        // iOS Safari specific
+                        this.video.webkitEnterFullscreen();
+                    }
                 } else {
-                    document.exitFullscreen();
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
                 }
             }
 
@@ -510,8 +786,9 @@
             showError(message) {
                 this.loading.style.display = 'none';
                 this.video.style.display = 'none';
+                this.playOverlay.classList.remove('show');
                 this.error.style.display = 'block';
-                this.error.querySelector('p').textContent = message;
+                document.getElementById('errorMessage').textContent = message;
             }
         }
 
