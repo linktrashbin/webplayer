@@ -38,14 +38,17 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+            padding: 15px 25px;
+            border-radius: 30px;
             display: flex;
             gap: 15px;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .player-container:hover .controls {
@@ -53,64 +56,132 @@
         }
 
         .control-btn {
-            background: none;
+            background: linear-gradient(145deg, #333, #555);
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .control-btn:hover {
-            color: #ff6b6b;
+            background: linear-gradient(145deg, #ff6b6b, #ff5252);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .seek-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .progress-container {
             flex: 1;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
+            height: 8px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border-radius: 4px;
             cursor: pointer;
             position: relative;
+            min-width: 200px;
+            overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background: #ff6b6b;
-            border-radius: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ff8a80);
+            border-radius: 4px;
             width: 0%;
-            transition: width 0.1s;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
+        }
+
+        .progress-handle {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-container:hover .progress-handle {
+            opacity: 1;
         }
 
         .volume-container {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .volume-slider {
             width: 80px;
-            height: 4px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
+            border-radius: 3px;
             outline: none;
             cursor: pointer;
+            appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .time-display {
             color: white;
             font-size: 14px;
-            min-width: 100px;
+            min-width: 110px;
             text-align: center;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .quality-selector {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #333;
+        .quality-indicator {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 5px;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quality-4k {
+            background: linear-gradient(135deg, #FF6B6B, #FF5252);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .quality-fhd {
+            background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+            box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3);
+        }
+
+        .quality-hd {
+            background: linear-gradient(135deg, #FFB74D, #FFA726);
+            box-shadow: 0 4px 12px rgba(255, 183, 77, 0.3);
+        }
+
+        .quality-sd {
+            background: linear-gradient(135deg, #81C784, #66BB6A);
+            box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
         }
 
         .error-message {
@@ -127,6 +198,28 @@
             text-align: center;
             font-size: 18px;
         }
+
+        .top-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .player-container:hover .top-info {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .control-btn:active {
+            animation: pulse 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -137,30 +230,35 @@
             <p>Please check the video URL or try a different format.</p>
         </div>
         
-        <video id="videoPlayer" style="display: none;" preload="metadata">
+        <video id="videoPlayer" style="display: none;" preload="metadata" autoplay>
             Your browser doesn't support video playback.
         </video>
 
+        <div class="top-info">
+            <div class="quality-indicator" id="qualityIndicator">AUTO</div>
+        </div>
+
         <div class="controls">
-            <button class="control-btn" id="playPauseBtn">▶️</button>
+            <button class="control-btn" id="playPauseBtn">⏸️</button>
             <button class="control-btn" id="stopBtn">⏹️</button>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
+            
+            <div class="seek-controls">
+                <button class="control-btn" id="rewindBtn" title="Rewind 10s">⏪</button>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-handle" id="progressHandle"></div>
+                </div>
+                <button class="control-btn" id="forwardBtn" title="Forward 10s">⏩</button>
             </div>
+            
             <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+            
             <div class="volume-container">
                 <button class="control-btn" id="muteBtn">🔊</button>
                 <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100">
             </div>
-            <select class="quality-selector" id="qualitySelector">
-                <option value="auto">Auto Quality</option>
-                <option value="4k">4K (2160p)</option>
-                <option value="1440p">1440p</option>
-                <option value="1080p">1080p</option>
-                <option value="720p">720p</option>
-                <option value="480p">480p</option>
-            </select>
-            <button class="control-btn" id="fullscreenBtn">⛶</button>
+            
+            <button class="control-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
         </div>
     </div>
 
@@ -170,13 +268,16 @@
                 this.video = document.getElementById('videoPlayer');
                 this.playPauseBtn = document.getElementById('playPauseBtn');
                 this.stopBtn = document.getElementById('stopBtn');
+                this.rewindBtn = document.getElementById('rewindBtn');
+                this.forwardBtn = document.getElementById('forwardBtn');
                 this.progressContainer = document.getElementById('progressContainer');
                 this.progressBar = document.getElementById('progressBar');
+                this.progressHandle = document.getElementById('progressHandle');
                 this.timeDisplay = document.getElementById('timeDisplay');
                 this.muteBtn = document.getElementById('muteBtn');
                 this.volumeSlider = document.getElementById('volumeSlider');
-                this.qualitySelector = document.getElementById('qualitySelector');
                 this.fullscreenBtn = document.getElementById('fullscreenBtn');
+                this.qualityIndicator = document.getElementById('qualityIndicator');
                 this.loading = document.getElementById('loading');
                 this.error = document.getElementById('error');
 
@@ -197,16 +298,31 @@
                     return;
                 }
 
-                // Support various video formats
-                const supportedFormats = ['.mp4', '.mkv', '.webm', '.avi', '.mov', '.m4v'];
-                const fileExtension = videoUrl.toLowerCase().substring(videoUrl.lastIndexOf('.'));
-                
-                if (!supportedFormats.some(format => fileExtension.includes(format.substring(1)))) {
-                    console.warn('Unsupported format detected, but attempting to load...');
-                }
-
                 this.video.src = videoUrl;
                 this.video.load();
+                this.detectQuality(videoUrl);
+            }
+
+            detectQuality(url) {
+                // Auto-detect quality from URL or file name
+                const urlLower = url.toLowerCase();
+                
+                if (urlLower.includes('4k') || urlLower.includes('2160p') || urlLower.includes('uhd')) {
+                    this.setQualityIndicator('4K UHD', '4k');
+                } else if (urlLower.includes('1080p') || urlLower.includes('fhd') || urlLower.includes('fullhd')) {
+                    this.setQualityIndicator('Full HD', 'fhd');
+                } else if (urlLower.includes('720p') || urlLower.includes('hd')) {
+                    this.setQualityIndicator('HD', 'hd');
+                } else if (urlLower.includes('480p') || urlLower.includes('sd')) {
+                    this.setQualityIndicator('SD', 'sd');
+                } else {
+                    this.setQualityIndicator('AUTO', 'auto');
+                }
+            }
+
+            setQualityIndicator(text, type) {
+                this.qualityIndicator.textContent = text;
+                this.qualityIndicator.className = `quality-indicator quality-${type}`;
             }
 
             bindEvents() {
@@ -219,6 +335,9 @@
                     this.loading.style.display = 'none';
                     this.video.style.display = 'block';
                     this.error.style.display = 'none';
+                    
+                    // Auto-detect actual quality after video loads
+                    this.detectActualQuality();
                 });
 
                 this.video.addEventListener('error', () => {
@@ -230,9 +349,19 @@
                     this.updateTimeDisplay();
                 });
 
+                this.video.addEventListener('play', () => {
+                    this.playPauseBtn.textContent = '⏸️';
+                });
+
+                this.video.addEventListener('pause', () => {
+                    this.playPauseBtn.textContent = '▶️';
+                });
+
                 // Control events
                 this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
                 this.stopBtn.addEventListener('click', () => this.stop());
+                this.rewindBtn.addEventListener('click', () => this.rewind());
+                this.forwardBtn.addEventListener('click', () => this.forward());
                 this.progressContainer.addEventListener('click', (e) => this.seek(e));
                 this.muteBtn.addEventListener('click', () => this.toggleMute());
                 this.volumeSlider.addEventListener('input', () => this.setVolume());
@@ -240,34 +369,50 @@
 
                 // Keyboard shortcuts
                 document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            }
 
-                // Quality selector (placeholder - actual implementation depends on video source)
-                this.qualitySelector.addEventListener('change', () => {
-                    console.log('Quality changed to:', this.qualitySelector.value);
-                    // Implementation would depend on video source providing multiple quality options
-                });
+            detectActualQuality() {
+                if (this.video.videoHeight) {
+                    const height = this.video.videoHeight;
+                    
+                    if (height >= 2160) {
+                        this.setQualityIndicator('4K UHD', '4k');
+                    } else if (height >= 1080) {
+                        this.setQualityIndicator('Full HD', 'fhd');
+                    } else if (height >= 720) {
+                        this.setQualityIndicator('HD', 'hd');
+                    } else {
+                        this.setQualityIndicator('SD', 'sd');
+                    }
+                }
             }
 
             togglePlayPause() {
                 if (this.video.paused) {
                     this.video.play();
-                    this.playPauseBtn.textContent = '⏸️';
                 } else {
                     this.video.pause();
-                    this.playPauseBtn.textContent = '▶️';
                 }
             }
 
             stop() {
                 this.video.pause();
                 this.video.currentTime = 0;
-                this.playPauseBtn.textContent = '▶️';
+            }
+
+            rewind() {
+                this.video.currentTime = Math.max(0, this.video.currentTime - 10);
+            }
+
+            forward() {
+                this.video.currentTime = Math.min(this.video.duration, this.video.currentTime + 10);
             }
 
             updateProgress() {
                 if (this.video.duration) {
                     const progress = (this.video.currentTime / this.video.duration) * 100;
                     this.progressBar.style.width = progress + '%';
+                    this.progressHandle.style.left = progress + '%';
                 }
             }
 
@@ -336,10 +481,12 @@
                         this.togglePlayPause();
                         break;
                     case 'ArrowLeft':
-                        this.video.currentTime = Math.max(0, this.video.currentTime - 10);
+                        e.preventDefault();
+                        this.rewind();
                         break;
                     case 'ArrowRight':
-                        this.video.currentTime = Math.min(this.video.duration, this.video.currentTime + 10);
+                        e.preventDefault();
+                        this.forward();
                         break;
                     case 'ArrowUp':
                         e.preventDefault();
